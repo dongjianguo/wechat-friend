@@ -1,0 +1,475 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>朋友圈</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <style>
+    html,body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+    }
+    p {
+      margin: 0;
+      padding: 0;
+      line-height: 1;
+    }
+    .w-friend-head {
+      position: relative;
+      width: 100%;
+      height: 270px;
+      background-image: url(assets/img/bg.jpg);
+      background-size: 100% auto;
+      background-position: bottom left;
+      background-repeat: no-repeat;
+    }
+    .w-friend-name {
+      position: absolute;
+      right: 32%;
+      bottom: 10px;
+      font-size: 18px;
+      color: #fff;
+    }
+    .w-friend-avatar {
+      position: absolute;
+      right: 5%;
+      bottom: -35px;
+      width: 80px;
+      height: 80px;
+    }
+    .w-friend-avatar img {
+      width: 100%;
+      height: 100%;
+    }
+    .w-friend-col {
+      padding: 20px 20px 0;
+      width: 100%;
+      border-top: 1px solid #d6d6d6;
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+    .w-friend-col.w-friend-fixed {
+      border-top: 1px solid transparent;
+      margin-top: 30px;
+    }
+    .w-friend-figure {
+      float: left;
+      width: 50px;
+      height: 50px;
+    }
+    .w-friend-figure img {
+      width: 100%;
+      height: 100%;
+    }
+    .w-friend-info {
+      float: right;
+      width: 80%;
+      font-size: 15px;
+      vertical-align: top;
+    }
+    .w-friend-person {
+      font-size: 16px;
+      line-height: 1.5;
+      color: #576b95;
+    }
+    .w-friend-text {
+      line-height: 1.4;
+      word-break: break-all;
+    }
+    .w-friend-function {
+      position: relative;
+      margin: 5px 0;
+      font-size: 15px;
+      overflow: hidden;
+    }
+    .w-friend-time {
+      float: left;
+      font-size: 14px;
+      line-height: 3;
+      color: #aaaaaa;
+    }
+    .w-friend-slide {
+      position: absolute;
+      top: 0;
+      right: 40px;
+      display: none;
+      color: #fff;
+      background: #393a3f;
+      z-index: 100;
+    }
+    .w-friend-like, .w-friend-input {
+      display: inline-block;
+      padding: 10px 15px;
+      text-align: center;
+    }
+    .w-friend-comment {
+      float: right;
+      margin-top: 10px;
+      width: 33px;
+      height: 22px;
+      background-image: url(assets/img/comment.png);
+      background-size: 100% 100%;
+    }
+    .w-friend-reply {
+      position: relative;
+      margin-bottom: 10px;
+      padding-bottom: 10px;
+      background: #eeeeee;
+    }
+    .w-friend-reply:after{
+      content: "";
+      position: absolute;
+      top: -8px;
+      left: 8px;
+      display: block;
+      width: 0;
+      border-width: 0 10px 10px 10px;
+      border-style: solid;
+      border-color: #eeeeee transparent;
+    }
+    .w-friend-reply-top {
+      margin-bottom: 10px;
+      padding: 10px;
+      color: #576b95;
+      border-bottom: 1px solid #d6d6d6;
+    }
+    .w-friend-reply-col {
+      padding: 0 10px;
+      line-height: 1.5;
+    }
+    .w-friend-reply-color {
+      color: #576b95;
+    }
+    .j_slideAnimation {
+      display: block;
+      -webkit-animation-duration: .3s;
+      animation-duration: .3s;
+      -webkit-animation-fill-mode: both;
+      animation-fill-mode: both;
+      -webkit-animation-name: fadeInRight;
+      animation-name: fadeInRight;
+    }
+    @-webkit-keyframes fadeInRight {
+      from {
+        -webkit-transform: scale(0,1);
+        transform: scale(0,1);
+        -webkit-transform-origin: right;
+        transform-origin: right;
+      }
+
+      to {
+        -webkit-transform: scale(1,1);
+        transform: scale(1,1);
+      }
+    }
+    @keyframes fadeInRight {
+      from {
+        -webkit-transform: scale(0,1);
+        transform: scale(0,1);
+        -webkit-transform-origin: right;
+        transform-origin: right;
+      }
+
+      to {
+        -webkit-transform: scale(1,1);
+        transform: scale(1,1);
+      }
+    }
+    .w-friend-myspread {
+      float: left;
+      position: relative;
+      margin-bottom: 10px;
+      width: 100%;
+      background: #eeeeee;
+      box-sizing: border-box;
+    }
+    .w-friend-myspread:after {
+      content: "";
+      position: absolute;
+      top: -8px;
+      left: 8px;
+      display: block;
+      width: 0;
+      border-width: 0 10px 10px 10px;
+      border-style: solid;
+      border-color: #eeeeee transparent;
+    }
+    .w-friend-replay-img {
+      display: inline-block;
+      width: 50px;
+      height: 50px;
+    }
+    .w-friend-replay-img img {
+      width: 100%;
+      height: 100%;
+    }
+    .w-friend-myspread-top {
+      padding: 10px;
+      border-bottom: 1px solid #fff;
+      word-break: break-all;
+      overflow: hidden;
+    }
+    .w-friend-myspread-col {
+      padding: 10px;
+    }
+    .w-friend-myspread-line {
+      position: relative;
+      display: inline-block;
+      margin-left: 21px;
+      width: 92%;
+    }
+    .w-friend-myspread-col-fixed .w-friend-myspread-line {
+      margin-left: 0;
+    }
+    .w-friend-myspread-avatar {
+      display: inline-block;
+      width: 50px;
+      height: 50px;
+    }
+    .w-friend-myspread-avatar img {
+      width: 100%;
+      height: 100%;
+    }
+    .w-friend-myspread-info {
+      display: inline-block;
+      width: 75%;
+      vertical-align: top;
+    }
+    .w-friedn-myspread-wrap {
+      margin-top: 4px;
+      overflow: hidden;
+    }
+    .w-friend-myspread-title {
+      float: left;
+      font-size: 14px;
+    }
+    .w-friend-myspread-color {
+      color: #576b95;
+    }
+    .w-friend-myspread-time {
+      float: right;
+      font-size: 12px;
+      color: #aaaaaa;
+    }
+    .w-friend-myspread-text {
+      margin-top: 16px;
+      width: 100%;
+      font-size: 14px;
+      word-break: break-all;
+    }
+  </style>
+</head>
+<body>
+  <div class="w-friend">
+    <div class="w-friend-head">
+      <span class="w-friend-name">爱吃的女生体重不会差</span>
+      <div class="w-friend-avatar">
+        <img src="assets/img/daughter.jpg" alt="avatar"/>
+      </div>
+    </div>
+    <!--<div class="w-friend-col w-friend-fixed j_col">-->
+      <!--<div class="w-friend-figure">-->
+        <!--<img src="assets/img/avatar1.png" alt="figure"/>-->
+      <!--</div>-->
+      <!--<div class="w-friend-info">-->
+        <!--<p class="w-friend-person">张三</p>-->
+        <!--<p class="w-friend-text">回到深圳，各种不适应，感觉楼下的快餐店越来越难吃了~~-->
+          <!--元宵节快到了，怀念妈妈做的汤圆</p>-->
+        <!--<div class="w-friend-function">-->
+          <!--<p class="w-friend-time">1小时前</p>-->
+          <!--<div class="w-friend-comment j_toggle"></div>-->
+          <!--<div class="w-friend-slide j_show">-->
+            <!--<div class="w-friend-like j_likeText">-->
+              <!--<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"-->
+                 <!--width="16px" height="14px" viewBox="0 0 86 70" enable-background="new 0 0 18 16" xml:space="preserve">-->
+                <!--<path fill="#fff" d="M78.947,5.754c-8.359-7.672-21.911-7.672-30.271,0L43,10.963l-5.678-5.209c-8.358-7.672-21.91-7.672-30.27,0-->
+                <!--c-9.404,8.63-9.404,22.624,0,31.254L43,70l35.947-32.992C88.351,28.377,88.351,14.384,78.947,5.754z M73.623,31.878L43,60.446-->
+                <!--L12.379,31.878C9.29,29.043,8.095,25.316,8.095,21.38c0-3.934,0.689-7.162,3.778-9.996C14.602,8.879,18.266,7.5,22.188,7.5-->
+                <!--c3.925,0,7.588,2.379,10.317,4.884l10.497,9.133l10.493-9.133C56.224,9.879,59.888,7.5,63.812,7.5c3.924,0,7.588,1.379,10.316,3.885-->
+                <!--c3.089,2.833,3.776,6.062,3.778,9.996C77.907,25.316,76.712,29.043,73.623,31.878z"/>-->
+                <!--<g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g>-->
+              <!--</svg>-->
+              <!--赞-->
+            <!--</div>-->
+            <!--<div class="w-friend-input j_input">-->
+              <!--<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="16px" height="16px" viewBox="0 0 512 512">-->
+                <!--<g>-->
+                <!--</g>-->
+                <!--<path d="M426.666 21.334h-362.666c-35.285 0-64 28.715-64 64v256c0 35.286 42.666 42.666 64 42.666v128l192-128h170.667c35.286 0 64-28.714 64-64v-234.667c0-35.285-28.714-64-64-64zM448 320c0 11.755-9.579 21.334-21.334 21.334h-192l-128 106.666v-106.666h-42.666c-11.755 0-21.334-9.579-21.334-21.334v-234.667c0-11.755 9.578-21.334 21.334-21.334h362.666c11.755 0 21.334 9.579 21.334 21.334v234.667zM85.334 128h256v42.666h-256zM85.334 192h320v21.334h-320zM85.334 234.667h320v21.333h-320zM85.334 277.334h170.666v21.334h-170.667z" fill="#fff" />-->
+              <!--</svg>-->
+              <!--评论-->
+            <!--</div>-->
+          <!--</div>-->
+        <!--</div>-->
+        <!--<div class="w-friend-reply">-->
+          <!--<div class="w-friend-reply-top">-->
+            <!--<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"-->
+                 <!--width="16px" height="14px" viewBox="0 0 86 70" enable-background="new 0 0 18 16" xml:space="preserve">-->
+                <!--<path fill="#576b95" d="M78.947,5.754c-8.359-7.672-21.911-7.672-30.271,0L43,10.963l-5.678-5.209c-8.358-7.672-21.91-7.672-30.27,0-->
+                <!--c-9.404,8.63-9.404,22.624,0,31.254L43,70l35.947-32.992C88.351,28.377,88.351,14.384,78.947,5.754z M73.623,31.878L43,60.446-->
+                <!--L12.379,31.878C9.29,29.043,8.095,25.316,8.095,21.38c0-3.934,0.689-7.162,3.778-9.996C14.602,8.879,18.266,7.5,22.188,7.5-->
+                <!--c3.925,0,7.588,2.379,10.317,4.884l10.497,9.133l10.493-9.133C56.224,9.879,59.888,7.5,63.812,7.5c3.924,0,7.588,1.379,10.316,3.885-->
+                <!--c3.089,2.833,3.776,6.062,3.778,9.996C77.907,25.316,76.712,29.043,73.623,31.878z"/>-->
+                <!--<g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g>-->
+              <!--</svg>-->
+            <!--<span>张三</span>-->
+            <!--<span>,李四</span>-->
+            <!--<span class="j_name"></span>-->
+          <!--</div>-->
+          <!--<p class="w-friend-reply-col">-->
+            <!--<span class="w-friend-reply-color">张三</span>:-->
+            <!--好惨啊,没有人有同感吗?-->
+          <!--</p>-->
+          <!--<p class="w-friend-reply-col">-->
+            <!--<span class="w-friend-reply-color">李四</span>回复<span class="w-friend-reply-color">张三</span>:-->
+            <!--哎,可怜的孩子,我也没有汤圆吃.-->
+          <!--</p>-->
+        <!--</div>-->
+      <!--</div>-->
+    <!--</div>-->
+    <div class="w-friend-col w-friend-fixed j_col">
+      <div class="w-friend-figure">
+        <img src="assets/img/daughter.jpg" alt="figure"/>
+      </div>
+      <div class="w-friend-info">
+        <p class="w-friend-person">爱吃的女生体重不会差</p>
+        <p class="w-friend-text">回到深圳，各种不适应，感觉楼下的快餐店越来越难吃了~~
+          元宵节快到了，怀念妈妈做的汤圆</p>
+        <div class="w-friend-function">
+          <p class="w-friend-time">1小时前</p>
+          <div class="w-friend-comment j_toggle"></div>
+          <div class="w-friend-slide j_show">
+            <div class="w-friend-like j_likeImg">
+              <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                 width="16px" height="14px" viewBox="0 0 86 70" enable-background="new 0 0 18 16" xml:space="preserve">
+                <path fill="#fff" d="M78.947,5.754c-8.359-7.672-21.911-7.672-30.271,0L43,10.963l-5.678-5.209c-8.358-7.672-21.91-7.672-30.27,0
+                c-9.404,8.63-9.404,22.624,0,31.254L43,70l35.947-32.992C88.351,28.377,88.351,14.384,78.947,5.754z M73.623,31.878L43,60.446
+                L12.379,31.878C9.29,29.043,8.095,25.316,8.095,21.38c0-3.934,0.689-7.162,3.778-9.996C14.602,8.879,18.266,7.5,22.188,7.5
+                c3.925,0,7.588,2.379,10.317,4.884l10.497,9.133l10.493-9.133C56.224,9.879,59.888,7.5,63.812,7.5c3.924,0,7.588,1.379,10.316,3.885
+                c3.089,2.833,3.776,6.062,3.778,9.996C77.907,25.316,76.712,29.043,73.623,31.878z"/>
+                <g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g>
+              </svg>
+              赞
+            </div>
+            <div class="w-friend-input j_input">
+              <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="16px" height="16px" viewBox="0 0 512 512">
+                <g>
+                </g>
+                <path d="M426.666 21.334h-362.666c-35.285 0-64 28.715-64 64v256c0 35.286 42.666 42.666 64 42.666v128l192-128h170.667c35.286 0 64-28.714 64-64v-234.667c0-35.285-28.714-64-64-64zM448 320c0 11.755-9.579 21.334-21.334 21.334h-192l-128 106.666v-106.666h-42.666c-11.755 0-21.334-9.579-21.334-21.334v-234.667c0-11.755 9.578-21.334 21.334-21.334h362.666c11.755 0 21.334 9.579 21.334 21.334v234.667zM85.334 128h256v42.666h-256zM85.334 192h320v21.334h-320zM85.334 234.667h320v21.333h-320zM85.334 277.334h170.666v21.334h-170.667z" fill="#fff" />
+              </svg>
+              评论
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="w-friend-myspread">
+        <div class="w-friend-myspread-top">
+          <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                 width="16px" height="14px" viewBox="0 0 86 70" enable-background="new 0 0 18 16" xml:space="preserve" style="margin-bottom: 15px;">
+                <path fill="#576b95" d="M78.947,5.754c-8.359-7.672-21.911-7.672-30.271,0L43,10.963l-5.678-5.209c-8.358-7.672-21.91-7.672-30.27,0
+                c-9.404,8.63-9.404,22.624,0,31.254L43,70l35.947-32.992C88.351,28.377,88.351,14.384,78.947,5.754z M73.623,31.878L43,60.446
+                L12.379,31.878C9.29,29.043,8.095,25.316,8.095,21.38c0-3.934,0.689-7.162,3.778-9.996C14.602,8.879,18.266,7.5,22.188,7.5
+                c3.925,0,7.588,2.379,10.317,4.884l10.497,9.133l10.493-9.133C56.224,9.879,59.888,7.5,63.812,7.5c3.924,0,7.588,1.379,10.316,3.885
+                c3.089,2.833,3.776,6.062,3.778,9.996C77.907,25.316,76.712,29.043,73.623,31.878z"/>
+                <g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g>
+              </svg>
+          <span class="w-friend-replay-img">
+            <img src="assets/img/avatar1.png" alt="avatar"/>
+          </span>
+          <span class="w-friend-replay-img">
+            <img src="assets/img/avatar2.png" alt="avatar"/>
+          </span>
+          <span class="w-friend-replay-img">
+            <img src="assets/img/avatar3.png" alt="avatar"/>
+          </span>
+          <span class="w-friend-replay-img j_img">
+            <img src="" hidden/>
+          </span>
+        </div>
+        <div class="w-friend-myspread-col w-friend-myspread-col-fixed">
+          <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="16px" height="16px" viewBox="0 0 512 512" style="margin-bottom: 15px;">
+            <g>
+            </g>
+            <path d="M426.666 21.334h-362.666c-35.285 0-64 28.715-64 64v256c0 35.286 42.666 42.666 64 42.666v128l192-128h170.667c35.286 0 64-28.714 64-64v-234.667c0-35.285-28.714-64-64-64zM448 320c0 11.755-9.579 21.334-21.334 21.334h-192l-128 106.666v-106.666h-42.666c-11.755 0-21.334-9.579-21.334-21.334v-234.667c0-11.755 9.578-21.334 21.334-21.334h362.666c11.755 0 21.334 9.579 21.334 21.334v234.667zM85.334 128h256v42.666h-256zM85.334 192h320v21.334h-320zM85.334 234.667h320v21.333h-320zM85.334 277.334h170.666v21.334h-170.667z" fill="#576b95" />
+          </svg>
+          <div class="w-friend-myspread-line">
+            <div class="w-friend-myspread-avatar">
+              <img src="assets/img/avatar2.png" alt="avatar"/>
+            </div>
+            <div class="w-friend-myspread-info">
+              <div class="w-friedn-myspread-wrap">
+                <p class="w-friend-myspread-title"><span class="w-friend-myspread-color">李四</span></p>
+                <p class="w-friend-myspread-time">2月18日 11:10</p>
+              </div>
+              <p class="w-friend-myspread-text">同病相怜………</p>
+            </div>
+          </div>
+        </div>
+        <div class="w-friend-myspread-col">
+          <div class="w-friend-myspread-line">
+            <div class="w-friend-myspread-avatar">
+              <img src="assets/img/avatar1.png" alt="avatar"/>
+            </div>
+            <div class="w-friend-myspread-info">
+              <div class="w-friedn-myspread-wrap">
+                <p class="w-friend-myspread-title">
+                  <span class="w-friend-myspread-color">张三</span>回复<span class="w-friend-myspread-color">李四</span>
+                </p>
+                <p class="w-friend-myspread-time">2月18日 11:30</p>
+              </div>
+              <p class="w-friend-myspread-text">同病相怜………</p>
+            </div>
+          </div>
+        </div>
+        <div class="w-friend-myspread-col">
+          <div class="w-friend-myspread-line">
+            <div class="w-friend-myspread-avatar">
+              <img src="assets/img/avatar3.png" alt="avatar"/>
+            </div>
+            <div class="w-friend-myspread-info">
+              <div class="w-friedn-myspread-wrap">
+                <p class="w-friend-myspread-title">
+                  <span class="w-friend-myspread-color">王五</span>
+                </p>
+                <p class="w-friend-myspread-time">2月18日 11:40</p>
+              </div>
+              <p class="w-friend-myspread-text">同病相怜………</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="bower_components/jquery/dist/jquery.min.js"></script>
+  <script>
+    var col = $('.j_col');
+    var name = '爱吃的女生体重不会差';
+    col.on('click','.j_toggle',function(){
+      $(this).siblings('.j_show').toggleClass('j_slideAnimation');
+    });
+    col.on('click','.j_likeText',function(){
+      var dom = $(this).parents('.w-friend-info').find('.j_name');
+
+      if(!dom.hasClass('added')) {
+        dom.html(',' + name).addClass('added');
+      } else {
+        dom.html('').removeClass('added');
+      }
+    });
+    col.on('click','.j_likeImg',function(){
+      var dom = $(this).parents('.j_col').find('.j_img');
+      if(!dom.hasClass('added')) {
+        dom.addClass('added').find('img').attr('src','assets/img/daughter.jpg').removeAttr('hidden');
+      } else {
+        dom.removeClass('added').find('img').removeAttr('src').attr('hidden','hidden');
+      }
+    });
+    col.on('click','.j_input',function(){
+      alert('该功能未开放,敬请期待');
+    });
+  </script>
+</body>
+</html>
